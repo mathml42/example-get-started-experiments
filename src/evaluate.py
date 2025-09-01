@@ -16,9 +16,13 @@ def dice(mask_pred, mask_true, classes=[0, 1], eps=1e-6):
     for c in classes:
         y_true = mask_true == c
         y_pred = mask_pred == c
-        intersection = 2.0 * np.sum(y_true * y_pred)
-        dice = intersection / (np.sum(y_true) + np.sum(y_pred) + eps)
-        dice_list.append(dice)
+        denom = (np.sum(y_true) + np.sum(y_pred) + eps)
+        if denom == 0:  # avoid nan
+            dice_list.append(1.0)  # perfect score when class absent in both
+        else:
+            intersection = 2.0 * np.sum(y_true * y_pred)
+            dice = intersection / (np.sum(y_true) + np.sum(y_pred) + eps)
+            dice_list.append(dice)
     return np.mean(dice_list)
 
 
@@ -71,7 +75,7 @@ def evaluate():
     test_img_fpaths = sorted(get_files(Path("data") / "test_data", extensions=".jpg"))
     test_dl = learn.dls.test_dl(test_img_fpaths)
     preds, _ = learn.get_preds(dl=test_dl)
-    masks_pred = np.array(preds[:, 1, :] > 0.5, dtype=np.uint8)
+    masks_pred = (preds[:, 1, :].cpu().numpy() > 0.5).astype(np.uint8)
     test_mask_fpaths = [
         get_mask_path(fpath, Path("data") / "test_data") for fpath in test_img_fpaths
     ]

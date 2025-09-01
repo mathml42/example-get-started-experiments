@@ -1,18 +1,63 @@
 params:
 - results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
+- results/train/params.yaml
 metrics:
 - results/train/metrics.json
+- results/evaluate/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/train/metrics.json
+- results/evaluate/metrics.json
 - results/evaluate/metrics.json
 plots:
 - results/train/plots/metrics:
     x: step
 - results/evaluate/plots/images
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/train/plots/metrics:
+    x: step
+- results/evaluate/plots/images
+- results/evaluate/plots/images
 artifacts:
   pool-segmentation:
     path: models/model.pkl
     type: model
-    desc: This is a Computer Vision (CV) model that's segmenting out swimming pools
-      from satellite images.
+    desc: This is a Computer Vision (CV) model that's segmenting out swimming 
+      pools from satellite images.
     labels:
     - cv
     - segmentation
@@ -54,8 +99,14 @@ stages:
     outs:
     - results/evaluate
   sagemaker:
-    cmd: cp models/model.pth sagemaker/code/model.pth && cd sagemaker && tar -cpzf
-      model.tar.gz code/ && cd .. && mv sagemaker/model.tar.gz .  && rm sagemaker/code/model.pth
+    cmd: powershell -Command "
+      Copy-Item models/model.pth sagemaker/code/model.pth;
+      Set-Location sagemaker;
+      tar -cpzf model.tar.gz code/;
+      Set-Location ..;
+      Move-Item sagemaker/model.tar.gz .;
+      Remove-Item sagemaker/code/model.pth
+      "
     deps:
     - models/model.pth
     outs:

@@ -10,8 +10,8 @@ stages:
       nfiles: 183
     - path: src/data_split.py
       hash: md5
-      md5: 280fa1684c5496fb9f76ff8c96bd2561
-      size: 1035
+      md5: 2c9440b508eca05f7a6416283a48fbf9
+      size: 1068
     params:
       params.yaml:
         base:
@@ -40,8 +40,8 @@ stages:
       nfiles: 158
     - path: src/train.py
       hash: md5
-      md5: 9db72f1631f53eecb232bc48992c425a
-      size: 2507
+      md5: d1856b623a77be17fa848a7b9b75feca
+      size: 2613
     params:
       params.yaml:
         base:
@@ -57,16 +57,16 @@ stages:
     outs:
     - path: models/model.pkl
       hash: md5
-      md5: 63cb30df484bfa1d6ea2cdebac74876c
-      size: 201725
+      md5: 3a13a57b919f79aebaff40d394417137
+      size: 206534
     - path: models/model.pth
       hash: md5
-      md5: 07b113fe1ab01de2d8a5453dccacdd3e
-      size: 165147
+      md5: 7665d4812d9bec1dcaed19ee90183ca9
+      size: 164900
     - path: results/train
       hash: md5
-      md5: a26429ff680d9b01c7e92043821bf41c.dir
-      size: 955
+      md5: 0e06e8751120bd3308ec2b9ebc60bbbd.dir
+      size: 1001
       nfiles: 5
   evaluate:
     cmd: python src/evaluate.py
@@ -78,12 +78,12 @@ stages:
       nfiles: 24
     - path: models/model.pkl
       hash: md5
-      md5: 63cb30df484bfa1d6ea2cdebac74876c
-      size: 201725
+      md5: 3a13a57b919f79aebaff40d394417137
+      size: 206534
     - path: src/evaluate.py
       hash: md5
-      md5: 84d2fd3b371546730396a763a51527a0
-      size: 3322
+      md5: df35e9901eb800f2705c5ff48717e683
+      size: 3629
     params:
       params.yaml:
         base:
@@ -93,19 +93,21 @@ stages:
     outs:
     - path: results/evaluate
       hash: md5
-      md5: 34985c391291e22ac0cfdf6e83ec7268.dir
-      size: 1257936
+      md5: b577e242ca158dea72997a8deae6f205.dir
+      size: 1292815
       nfiles: 11
   sagemaker:
-    cmd: cp models/model.pth sagemaker/code/model.pth && cd sagemaker && tar -cpzf
-      model.tar.gz code/ && cd .. && mv sagemaker/model.tar.gz .  && rm sagemaker/code/model.pth
+    cmd: powershell -Command " Copy-Item models/model.pth 
+      sagemaker/code/model.pth; Set-Location sagemaker; tar -cpzf model.tar.gz 
+      code/; Set-Location ..; Move-Item sagemaker/model.tar.gz .; Remove-Item 
+      sagemaker/code/model.pth "
     deps:
     - path: models/model.pth
       hash: md5
-      md5: 07b113fe1ab01de2d8a5453dccacdd3e
-      size: 165147
+      md5: 7665d4812d9bec1dcaed19ee90183ca9
+      size: 164900
     outs:
     - path: model.tar.gz
       hash: md5
-      md5: c615b812da343d71fcda080597a24525
-      size: 145778
+      md5: 469068595dee32ccb105d3eb145cf95a
+      size: 29

@@ -44,6 +44,7 @@ def train():
         batch_tfms=[
             Normalize.from_stats(*imagenet_stats),
         ],
+        num_workers=0,
     )
 
     model_names = [

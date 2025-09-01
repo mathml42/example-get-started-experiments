@@ -1,0 +1,13 @@
+name: dvc_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - dvc[s3]>=3.29.0
+      - dvclive>=3.0.1
+      - fastai
+      - python-box
+      - sagemaker
